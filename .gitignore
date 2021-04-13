@@ -1,0 +1,38 @@
+### VSCODE ###
+.vscode
+
+
+.swagger-codegen
+
+/target/
+!.mvn/wrapper/maven-wrapper.jar
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.settings
+.springBeans
+.sts4-cache
+
+### InteliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+
+### NetBeans ###
+/nbproject/private/
+/build/
+/nbbuild/
+/dist/
+/.nb-gradle/
+/bin/
+
+*.log
+*/**/*.log
+
+.DS_Store
+*/**/.DS_Store
+*.zip
+*/**/.zip

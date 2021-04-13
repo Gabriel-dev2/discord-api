@@ -1,11 +1,11 @@
 ### VSCODE ###
 .vscode
 
-
+.swagger-codegen-ignore
 .swagger-codegen
 
 /target/
-!.mvn/wrapper/maven-wrapper.jar
+.mvn/wrapper/maven-wrapper.jar
 
 ### STS ###
 .apt_generated

@@ -1,5 +1,7 @@
 package com.discord.api;
 
+import com.discord.exceptions.ApiException;
+
 public class NotFoundException extends ApiException {
     /**
      *

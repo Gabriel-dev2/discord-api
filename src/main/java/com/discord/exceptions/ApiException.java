@@ -1,4 +1,4 @@
-package com.discord.api;
+package com.discord.exceptions;
 
 public class ApiException extends Exception{
     /**

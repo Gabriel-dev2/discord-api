@@ -3,19 +3,23 @@
  * https://github.com/swagger-api/swagger-codegen
  * Do not edit the class manually.
  */
-package com.discord.api;
+package com.discord.api.controllers;
 
+import javax.security.auth.login.LoginException;
 import javax.validation.Valid;
 
-import com.discord.model.Message;
-import com.discord.model.ModelApiResponse;
-
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.discord.model.Message;
+import com.discord.model.ModelApiResponse;
+import com.discord.services.SendMessageService;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -28,14 +32,27 @@ import io.swagger.annotations.ApiResponses;
 @RequestMapping(path = "/api/v1", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 public class MessageApiController {
 
+    private SendMessageService sendMessageService;
+
+    @Autowired
+    MessageApiController(SendMessageService sendMessageService) {
+        this.sendMessageService = sendMessageService;
+    }
+
     @PostMapping(path = "message/send", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "Send message to a discord channel", nickname = "sendMessage", response = ModelApiResponse.class)
     @ApiResponses(value = { 
         @ApiResponse(code = 200, message = "Mensagem adicionada com sucesso", response = ModelApiResponse.class),
         @ApiResponse(code = 404, message = "Not found"),
         @ApiResponse(code = 405, message = "Invalid input") })
-    ResponseEntity<ModelApiResponse> sendMessage(@ApiParam(value = "É necessário que o campo mensagem esteja preenchido" ,required=true )  @Valid @RequestBody Message body) {
-        return null;
+    ResponseEntity<ModelApiResponse> sendMessage(@ApiParam(value = "É necessário que o campo mensagem esteja preenchido" ,required=true )  @Valid @RequestBody Message body) throws LoginException, InterruptedException {
+        ResponseEntity<ModelApiResponse> response = null;
+        this.sendMessageService.SendMessage(body.getChannelName(), body.getMessage());
+        ModelApiResponse model = new ModelApiResponse();
+        model.setCode(200);
+        model.setMessage("Mensagem enviada com sucesso!");
+        response = new ResponseEntity<>(model, HttpStatus.OK);
+        return response;
     }
 
 }

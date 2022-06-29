@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.discord.model.Message;
 import com.discord.model.ModelApiResponse;
-import com.discord.services.MessageService;
+import com.discord.services.BotService;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -32,11 +32,11 @@ import io.swagger.annotations.ApiResponses;
 @RequestMapping(path = "/api/v1", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 public class MessageApiController {
 
-    private MessageService sendMessageService;
+    private BotService botService;
 
     @Autowired
-    MessageApiController(MessageService sendMessageService) {
-        this.sendMessageService = sendMessageService;
+    MessageApiController(BotService botService) {
+        this.botService = botService;
     }
 
     @PostMapping(path = "message/send", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
@@ -45,13 +45,25 @@ public class MessageApiController {
         @ApiResponse(code = 200, message = "Mensagem adicionada com sucesso", response = ModelApiResponse.class),
         @ApiResponse(code = 404, message = "Not found"),
         @ApiResponse(code = 405, message = "Invalid input") })
-    ResponseEntity<ModelApiResponse> sendMessage(@ApiParam(value = "É necessário que o campo mensagem esteja preenchido" ,required=true )  @Valid @RequestBody Message body) throws LoginException, InterruptedException {
+    ResponseEntity<ModelApiResponse> sendMessage(@ApiParam(value = "É necessário que o campo mensagem esteja preenchido" ,required=true )  @Valid @RequestBody Message body) {
         ResponseEntity<ModelApiResponse> response = null;
-        this.sendMessageService.SendMessage(body.getChannelName(), body.getMessage());
-        ModelApiResponse model = new ModelApiResponse();
-        model.setCode(200);
-        model.setMessage("Mensagem enviada com sucesso!");
-        response = new ResponseEntity<>(model, HttpStatus.OK);
+        try {
+            boolean isSuccess = this.botService.sendMessage(body.getChannelName(), body.getMessage());
+            ModelApiResponse model = new ModelApiResponse();
+            if (isSuccess) {
+                model.setCode(200);
+                model.setMessage("Mensagem enviada com sucesso!");
+                response = new ResponseEntity<>(model, HttpStatus.OK);
+            } else {
+                model.setCode(502);
+                model.setMessage("Erro ao tentar enviar mensagem!");
+                response = new ResponseEntity<>(model, HttpStatus.BAD_GATEWAY);
+            }
+            
+        } catch (LoginException | InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
         return response;
     }
 

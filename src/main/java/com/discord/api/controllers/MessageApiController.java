@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.discord.model.Message;
 import com.discord.model.ModelApiResponse;
-import com.discord.services.SendMessageService;
+import com.discord.services.MessageService;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -32,10 +32,10 @@ import io.swagger.annotations.ApiResponses;
 @RequestMapping(path = "/api/v1", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 public class MessageApiController {
 
-    private SendMessageService sendMessageService;
+    private MessageService sendMessageService;
 
     @Autowired
-    MessageApiController(SendMessageService sendMessageService) {
+    MessageApiController(MessageService sendMessageService) {
         this.sendMessageService = sendMessageService;
     }
 

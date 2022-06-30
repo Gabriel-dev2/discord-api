@@ -90,6 +90,7 @@ public class BotServiceImpl extends ListenerAdapter implements BotService {
         List<TextChannel> channels = jda.getTextChannelsByName(channel, false);
         TextChannel textChannel = channels.get(0);
         textChannel.sendMessage(message).queue();
+        jda.shutdown();
         
         return true;
     }

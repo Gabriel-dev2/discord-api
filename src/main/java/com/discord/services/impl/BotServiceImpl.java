@@ -74,7 +74,7 @@ public class BotServiceImpl extends ListenerAdapter implements BotService {
                 break;
 
             default:
-                if (!event.getAuthor().getName().equals("CodeCommit-Event")) {
+                if (strMessage.startsWith("!")) {
                     channel.sendMessage("​❌​ Invalid command, please try again or type **!help** to get some instructions.").queue();
                 }
                 break;
